@@ -67,15 +67,22 @@ try
 function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $after, $maxClients)
 {
     $amountOfCurrentlyExistingTempChannels = intval($amountOfCurrentlyExistingTempChannels);
+    $newChannelName = $tempChannelName . ($amountOfCurrentlyExistingTempChannels + 1);
 
-        $ts3->channelCreate(array(
-        "channel_name" => $tempChannelName . ($amountOfCurrentlyExistingTempChannels + 1),
+    $ts3->channelCreate(array(
+        "channel_name" => $newChannelName,
         "channel_order" => $after,
         "channel_maxclients" => $maxClients,
         "channel_flag_maxclients_unlimited" => false,
         "channel_codec" => TeamSpeak3::CODEC_OPUS_VOICE, //  See: https://docs.planetteamspeak.com/ts3/php/framework/class_team_speak3.html#ac6e83b47f7d7d5f832195fa500095dc3
         "channel_flag_permanent" => true
     ));
+
+    foreach ($config['ChannelPermissions'] as $permission){
+        $channel = $ts3->channelGetByName($newChannelName);
+        $permissionArr = explode('=',$permission);
+        $channel->permAssign($permissionArr[0],$permissionArr[1]);
+    }
 }
 
 /**
@@ -175,5 +182,3 @@ function DeleteAllTemporaryPublicChannels($Channels, $tempChannelName, $ts3)
         }
     }
 }
-
-?>
