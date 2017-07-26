@@ -4,7 +4,7 @@ Disclaimer! <br /><br />
 
 Most Scripts/Bots where uploaded Tested, yet I do not guarantee it being fail-safe or safe for use and will only provide partially support.<br /><br />
 
-<b>It is recommended, that you put the "TeamSpeak3" directory in your own, personal library.<<br />
+<b>It is recommended, that you put the "TeamSpeak3" directory in your own, personal library.</b>
 For example /var/libraries/. Don't forget to change the path in config.php<br />
 This will save space and makes it easier to update it for all scripts.<br />
 
