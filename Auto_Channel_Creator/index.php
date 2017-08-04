@@ -48,7 +48,7 @@ try
             if($amountOfExistingTemporaryChannels <= $amountOfOccupiedTemporaryChannels)
             {
                 $after = GetLastPublicChannel($PublicChannelInfo, $ts3Channels, $config['TempChannelName']);
-                CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $after, $config['TempMaxClients'], $channelPermissions);
+                CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $after, $config['TempMaxClients'], $config['ChannelPermissions']);
             }
         }
         sleep($config['CheckDelay']);
