@@ -1,0 +1,8 @@
+
+*.xml
+
+.idea/vcs.xml
+
+.idea/TeamSpeak-Bots.iml
+
+.idea/modules.xml
