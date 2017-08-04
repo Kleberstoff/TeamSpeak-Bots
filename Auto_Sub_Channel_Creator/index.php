@@ -47,7 +47,7 @@ try
 
             if($amountOfExistingTemporaryChannels <= $amountOfOccupiedTemporaryChannels)
             {
-                CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $config['TopChannel'], $config['TempMaxClients']);
+                CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $config['TopChannel'], $config['TempMaxClients'], $channelPermissions);
             }
         }
         sleep($config['CheckDelay']);
@@ -65,7 +65,7 @@ try
  * @param $maxClients
  * @internal param $after
  */
-function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $TopChannel, $maxClients)
+function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $TopChannel, $maxClients, $channelPermissions)
 {
     $amountOfCurrentlyExistingTempChannels = intval($amountOfCurrentlyExistingTempChannels);
     $newChannelName = $tempChannelName . ($amountOfCurrentlyExistingTempChannels + 1);
@@ -79,7 +79,7 @@ function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExi
         "channel_flag_permanent" => true
     ));
 
-    foreach ($config['ChannelPermissions'] as $permission){
+    foreach ($channelPermissions as $permission){
         $channel = $ts3->channelGetByName($newChannelName);
         $permissionArr = explode('=',$permission);
         $channel->permAssign($permissionArr[0],$permissionArr[1]);
