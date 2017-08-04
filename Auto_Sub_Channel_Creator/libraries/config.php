@@ -19,6 +19,7 @@ $config['CheckDelay'] = 1; // Amount of Seconds between each Check. Only use Num
 /* TeamSpeak Settings */
 $config['PublicChannels'] = array(3, 4, 5); // Put the Public Channels here | Note: The Last Channel in this List should always be the last Channel in the TeamSpeak Order as well
 $config['TempChannelName'] = "Temp. Public Channel "; // Temporary Public Channel Name
+$config['TopChannel'] = "Parent"; // Parent channel ID. New temp channels will be created inside this channel
 $config['TempMaxClients'] = 2; // Set the Max Clients for new Temp Channels
 $config['ChannelPermissions'] = array(
   /* Example permissions:
