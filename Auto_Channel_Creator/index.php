@@ -178,7 +178,9 @@ function DeleteAllTemporaryPublicChannels($Channels, $tempChannelName, $ts3)
     {
         if (stristr($Channel['channel_name'], $tempChannelName))
         {
-            $ts3->channelDelete($Channel['cid']);
+            if($Channel['total_clients'] == "0") {
+                $ts3->channelDelete($Channel['cid']);
+            }
         }
     }
 }
