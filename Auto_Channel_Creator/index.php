@@ -48,7 +48,7 @@ try
             if($amountOfExistingTemporaryChannels <= $amountOfOccupiedTemporaryChannels)
             {
                 $after = GetLastPublicChannel($PublicChannelInfo, $ts3Channels, $config['TempChannelName']);
-                CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $after, $config['TempMaxClients']);
+                CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $after, $config['TempMaxClients'], $config['ChannelPermissions']);
             }
         }
         sleep($config['CheckDelay']);
@@ -64,7 +64,7 @@ try
  * @param $amountOfCurrentlyExistingTempChannels
  * @param $after
  */
-function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $after, $maxClients)
+function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $after, $maxClients, $channelPermissions)
 {
     $amountOfCurrentlyExistingTempChannels = intval($amountOfCurrentlyExistingTempChannels);
     $newChannelName = $tempChannelName . ($amountOfCurrentlyExistingTempChannels + 1);
@@ -78,7 +78,7 @@ function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExi
         "channel_flag_permanent" => true
     ));
 
-    foreach ($config['ChannelPermissions'] as $permission){
+    foreach ($channelPermissions as $permission){
         $channel = $ts3->channelGetByName($newChannelName);
         $permissionArr = explode('=',$permission);
         $channel->permAssign($permissionArr[0],$permissionArr[1]);
@@ -161,7 +161,7 @@ function CheckForEmptyExistingTemporaryPublicChannel($Channels, $tempChannelName
             $amount++;
             if($amount > $amountOfNeededChannels)
             {
-                $ts3->channelDelete($Channel['cid'], true);
+                $Channel->delete(true);
             }
         }
     }
@@ -178,7 +178,9 @@ function DeleteAllTemporaryPublicChannels($Channels, $tempChannelName, $ts3)
     {
         if (stristr($Channel['channel_name'], $tempChannelName))
         {
-            $ts3->channelDelete($Channel['cid']);
+            if($Channel['total_clients'] == "0") {
+                $Channel->delete();
+            }
         }
     }
 }
