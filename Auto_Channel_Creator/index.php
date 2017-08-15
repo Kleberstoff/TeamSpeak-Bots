@@ -161,7 +161,7 @@ function CheckForEmptyExistingTemporaryPublicChannel($Channels, $tempChannelName
             $amount++;
             if($amount > $amountOfNeededChannels)
             {
-                $ts3->channelDelete($Channel['cid'], true);
+                $Channel->delete(true);
             }
         }
     }
@@ -179,7 +179,7 @@ function DeleteAllTemporaryPublicChannels($Channels, $tempChannelName, $ts3)
         if (stristr($Channel['channel_name'], $tempChannelName))
         {
             if($Channel['total_clients'] == "0") {
-                $ts3->channelDelete($Channel['cid']);
+                $Channel->delete();
             }
         }
     }
