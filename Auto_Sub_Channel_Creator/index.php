@@ -63,22 +63,35 @@ try
  * @param $maxClients
  * @internal param $after
  */
-function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $TopChannel, $maxClients, $channelPermissions)
+function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $TopChannel, $maxClients, $channelPermissions, $order)
 {
     $amountOfCurrentlyExistingTempChannels = intval($amountOfCurrentlyExistingTempChannels);
     $newChannelName = $tempChannelName . ($amountOfCurrentlyExistingTempChannels + 1);
-
-    $ts3->channelCreate(array(
-        "channel_name" => $newChannelName,
-        "cpid" => $TopChannel,
-        "channel_maxclients" => $maxClients,
-        "channel_flag_maxclients_unlimited" => false,
-        "channel_codec" => TeamSpeak3::CODEC_OPUS_VOICE, //  See: https://docs.planetteamspeak.com/ts3/php/framework/class_team_speak3.html#ac6e83b47f7d7d5f832195fa500095dc3
-        "channel_flag_permanent" => true
-    ));
+    
+    if(empty($order)){    
+        $channelID = $ts3->channelCreate(array(
+            "channel_name" => $newChannelName,
+            "cpid" => $TopChannel,
+            "channel_maxclients" => $maxClients,
+            "channel_flag_maxclients_unlimited" => false,
+            "channel_codec" => TeamSpeak3::CODEC_OPUS_VOICE, //  See: https://docs.planetteamspeak.com/ts3/php/framework/class_team_speak3.html#ac6e83b47f7d7d5f832195fa500095dc3
+            "channel_flag_permanent" => true
+        ));
+    }
+    else{
+        $channelID = $ts3->channelCreate(array(
+            "channel_name" => $newChannelName,
+            "cpid" => $TopChannel,
+            "channel_order" => $order,
+            "channel_maxclients" => $maxClients,
+            "channel_flag_maxclients_unlimited" => false,
+            "channel_codec" => TeamSpeak3::CODEC_OPUS_VOICE, //  See: https://docs.planetteamspeak.com/ts3/php/framework/class_team_speak3.html#ac6e83b47f7d7d5f832195fa500095dc3
+            "channel_flag_permanent" => true
+        ));
+    }
 
     foreach ($channelPermissions as $permission){
-        $channel = $ts3->channelGetByName($newChannelName);
+        $channel = $ts3->channelGetById($channelID);
         $permissionArr = explode('=',$permission);
         $channel->permAssign($permissionArr[0],$permissionArr[1]);
     }
