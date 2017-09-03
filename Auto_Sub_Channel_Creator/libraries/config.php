@@ -23,10 +23,11 @@ $config['channel_order'] = ''; //Set this to the ID of the channel above the new
 $config['TopChannel'] = 2; // Parent channel ID. New temp channels will be created inside this channel
 $config['TempMaxClients'] = 2; // Set the Max Clients for new Temp Channels
 $config['ChannelPermissions'] = array(
+
+); // A list of all permissions can be either found in teamspeak itself by displaying permission names or on this list: https://www.teamspeak3.com/teamspeak-3-server-permission-list.php
   /* Example permissions:
    * "i_channel_needed_subscribe_power=500",
    * "i_channel_needed_join_power=40"
   */
-); // A list of all permissions can be either found in teamspeak itself by displaying permission names or on this list: https://www.teamspeak3.com/teamspeak-3-server-permission-list.php
 
 /* TeamSpeak Settings */
