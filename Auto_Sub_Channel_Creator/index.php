@@ -128,10 +128,10 @@ function CheckForExistingTemporaryPublicChannels($Channels, $tempChannelName)
     $amount = 0;
     foreach ($Channels as $Channel)
     {
-        //if (stristr($Channel['channel_name'], $tempChannelName))
-        //{
+        if (stristr($Channel['channel_name'], $tempChannelName))
+        {
             $amount++;
-        //}
+        }
     }
     return $amount;
 }
@@ -146,13 +146,13 @@ function CheckForOccupiedTemporaryChannels($Channels, $tempChannelName)
     $amount = 0;
     foreach ($Channels as $Channel)
     {
-        //if (stristr($Channel['channel_name'], $tempChannelName))
-        //{
+        if (stristr($Channel['channel_name'], $tempChannelName))
+        {
             if ($Channel['total_clients'] != "0")
             {
                 $amount++;
             }
-        //}
+        }
     }
     return $amount;
 }
