@@ -17,6 +17,7 @@ $config['CheckDelay'] = 1; // Amount of Seconds between each Check. Only use Num
 /* Bot Config End */
 
 /* TeamSpeak Settings */
+$config['channel_description'] = ''; //Set the description of the temporary channel. Leave blank if not needed
 $config['PublicChannels'] = array(3, 4, 5); // Put the permanent Public Channel ID's here | Note: The Last Channel in this List should always be the last Channel in the TeamSpeak Order as well
 $config['TempChannelName'] = "Temp. Public Channel "; // Temporary Public Channel Name
 $config['channel_order'] = ''; //Set this to the ID of the channel above the new temporary channels. Result: https://puu.sh/xquCS.png Leave empty if not needed
