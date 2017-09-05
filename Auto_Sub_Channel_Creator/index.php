@@ -33,7 +33,6 @@ try
       if($occupiedChannels != count($config['PublicChannels']))
         {
             DeleteAllTemporaryPublicChannels($ts3Channels, $config['TempChannelName'], $ts3, $config['TempMaxClients']);
-			echo 'rawr2';
         }
 
         if($occupiedChannels == count($config['PublicChannels']))
