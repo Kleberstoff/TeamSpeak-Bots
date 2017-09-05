@@ -22,17 +22,18 @@ try
         $ts3Channels = $ts3->channelGetbyId($config['TopChannel'])->subChannelList();
         $PublicChannelInfo = array();
 
-        foreach ($ts3Channels as $Channel) {
-            //$ChannelInfo = $ts3->channelGetbyID($Channel[]);
-            if ($Channel['total_clients'] != "0") {
+        foreach ($config['PublicChannels'] as $PublicChannel) {
+            $ChannelInfo = $ts3->channelGetbyID($PublicChannel);
+            if ($ChannelInfo['total_clients'] != "0") {
                 $occupiedChannels++;
             }
-            $ChannelInfo[] = $Channel;
+            $PublicChannelInfo[] = $ChannelInfo;
         }
 
       if($occupiedChannels != count($config['PublicChannels']))
         {
             DeleteAllTemporaryPublicChannels($ts3Channels, $config['TempChannelName'], $ts3, $config['TempMaxClients']);
+			echo 'rawr2';
         }
 
         if($occupiedChannels == count($config['PublicChannels']))
@@ -42,7 +43,7 @@ try
             $amountOfNeededTemporaryChannels = ($amountOfOccupiedTemporaryChannels + 1);
 
             CheckForEmptyExistingTemporaryPublicChannel($ts3Channels, $config['TempChannelName'], $amountOfNeededTemporaryChannels, $ts3);
-
+echo 'rawr';
             if($amountOfExistingTemporaryChannels <= $amountOfOccupiedTemporaryChannels)
             {
                 CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $config['TopChannel'], $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description']);
