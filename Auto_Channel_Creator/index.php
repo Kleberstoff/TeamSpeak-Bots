@@ -48,7 +48,7 @@ try
             if($amountOfExistingTemporaryChannels <= $amountOfOccupiedTemporaryChannels)
             {
                 $after = GetLastPublicChannel($PublicChannelInfo, $ts3Channels, $config['TempChannelName']);
-                CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $after, $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description']););
+                CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $after, $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description'], $config['chanel_codec']);
             }
         }
         sleep($config['CheckDelay']);
@@ -64,11 +64,11 @@ try
  * @param $amountOfCurrentlyExistingTempChannels
  * @param $after
  */
-function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $after, $maxClients, $channelPermissions)
+function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $after, $maxClients, $channelPermissions, $codec)
 {
     $amountOfCurrentlyExistingTempChannels = intval($amountOfCurrentlyExistingTempChannels);
     $newChannelName = $tempChannelName . ($amountOfCurrentlyExistingTempChannels + 1);
-    if(!empty($order){
+    if(!empty($order)){
         $after = $order;
     }
     $channelID = $ts3->channelCreate(array(
@@ -76,7 +76,7 @@ function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExi
         "channel_order" => $after,
         "channel_maxclients" => $maxClients,
         "channel_flag_maxclients_unlimited" => false,
-        "channel_codec" => TeamSpeak3::CODEC_OPUS_VOICE, //  See: https://docs.planetteamspeak.com/ts3/php/framework/class_team_speak3.html#ac6e83b47f7d7d5f832195fa500095dc3
+        "channel_codec" => $codec,
         "channel_flag_permanent" => true
     ));
 

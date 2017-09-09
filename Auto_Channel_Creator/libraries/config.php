@@ -17,6 +17,7 @@ $config['CheckDelay'] = 1; // Amount of Seconds between each Check. Only use Num
 /* Bot Config End */
 
 /* TeamSpeak Settings */
+$config['channel_codec'] = TeamSpeak3::CODEC_OPUS_VOICE; //  See: https://docs.planetteamspeak.com/ts3/php/framework/class_team_speak3.html#ac6e83b47f7d7d5f832195fa500095dc3
 $config['channel_description'] = ''; //Set the description of the temporary channel. Leave blank if not needed
 $config['PublicChannels'] = array(3, 4, 5); // Put the Public Channels here | Note: The Last Channel in this List should always be the last Channel in the TeamSpeak Order as well
 $config['TempChannelName'] = "Temp. Public Channel "; // Temporary Public Channel Name
