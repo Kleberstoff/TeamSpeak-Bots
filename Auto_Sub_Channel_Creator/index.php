@@ -42,7 +42,6 @@ try
             $amountOfNeededTemporaryChannels = ($amountOfOccupiedTemporaryChannels + 1);
 
             CheckForEmptyExistingTemporaryPublicChannel($ts3Channels, $config['TempChannelName'], $amountOfNeededTemporaryChannels, $ts3);
-echo 'rawr';
             if($amountOfExistingTemporaryChannels <= $amountOfOccupiedTemporaryChannels)
             {
                 CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $config['TopChannel'], $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description']);
