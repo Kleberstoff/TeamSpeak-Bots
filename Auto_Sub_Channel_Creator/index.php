@@ -10,48 +10,43 @@ require("libraries/config.php");
 // Channel 4 | Will be created after Channel 3 is being occupied by at least 1 User
 // If a User joins in Channel 4, Channel 5 will be created
 
-try
-{
+try {
     TeamSpeak3::init();
     $ts3 = TeamSpeak3::factory("serverquery://{$config["Username"]}:{$config["Password"]}@{$config["serverIP"]}:{$config["qPort"]}/?server_port={$config["sPort"]}&nickname={$config["BotName"]}#no_query_clients");
-    while (true)
-    {
+    while (true) {
         set_time_limit(30); // Preventing a PHP Timeout
-        //foreach($config['TopChannel'] as $top_channel){
-        $occupiedChannels = 0;
-        $ts3->channelListReset();
-        $ts3Channels = $ts3->channelGetbyId($config['TopChannel'])->subChannelList();
-        $PublicChannelInfo = array();
+        foreach ($config['TopChannel'] as $top_channel) {
+            $occupiedChannels = 0;
+            $ts3->channelListReset();
+            $ts3Channels = $ts3->channelGetbyId($config['TopChannel'])->subChannelList();
+            $PublicChannelInfo = array();
 
-        foreach ($config['PublicChannels']/*['$top_channel']*/ as $PublicChannel) {
-            $ChannelInfo = $ts3->channelGetbyID($PublicChannel);
-            if ($ChannelInfo['total_clients'] != "0") {
-                $occupiedChannels++;
+            foreach ($config['PublicChannels']['$top_channel'] as $PublicChannel) {
+                $ChannelInfo = $ts3->channelGetbyID($PublicChannel);
+                if ($ChannelInfo['total_clients'] != "0") {
+                    $occupiedChannels++;
+                }
+                $PublicChannelInfo[] = $ChannelInfo;
             }
-            $PublicChannelInfo[] = $ChannelInfo;
-        }
 
-      if($occupiedChannels != count($config['PublicChannels']/*['$top_channel']*/))
-        {
-            DeleteAllTemporaryPublicChannels($ts3Channels, $config['TempChannelName'], $ts3, $config['TempMaxClients']);
-        }
-
-        if($occupiedChannels == count($config['PublicChannels']/*['$top_channel']*/))
-        {
-            $amountOfExistingTemporaryChannels = CheckForExistingTemporaryPublicChannels($ts3Channels, $config['TempChannelName']);
-            $amountOfOccupiedTemporaryChannels = CheckForOccupiedTemporaryChannels($ts3Channels, $config['TempChannelName']);
-            $amountOfNeededTemporaryChannels = ($amountOfOccupiedTemporaryChannels + 1);
-
-            CheckForEmptyExistingTemporaryPublicChannel($ts3Channels, $config['TempChannelName'], $amountOfNeededTemporaryChannels, $ts3);
-            if($amountOfExistingTemporaryChannels <= $amountOfOccupiedTemporaryChannels)
-            {
-                CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $config['TopChannel'], $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description'], $config['channel_codec'], $config['channel_codec_quality']);
+            if ($occupiedChannels != count($config['PublicChannels']['$top_channel'])) {
+                DeleteAllTemporaryPublicChannels($ts3Channels, $config['TempChannelName'], $ts3, $config['TempMaxClients']);
             }
+
+            if ($occupiedChannels == count($config['PublicChannels']['$top_channel'])) {
+                $amountOfExistingTemporaryChannels = CheckForExistingTemporaryPublicChannels($ts3Channels, $config['TempChannelName']);
+                $amountOfOccupiedTemporaryChannels = CheckForOccupiedTemporaryChannels($ts3Channels, $config['TempChannelName']);
+                $amountOfNeededTemporaryChannels = ($amountOfOccupiedTemporaryChannels + 1);
+
+                CheckForEmptyExistingTemporaryPublicChannel($ts3Channels, $config['TempChannelName'], $amountOfNeededTemporaryChannels, $ts3);
+                if ($amountOfExistingTemporaryChannels <= $amountOfOccupiedTemporaryChannels) {
+                    CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $config['TopChannel'], $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description'], $config['channel_codec'], $config['channel_codec_quality']);
+                }
+            }
+            sleep($config['CheckDelay']);
         }
-        sleep($config['CheckDelay']);
     }
-} catch (Exception $ex)
-{
+} catch (Exception $ex) {
     echo "ErrorID: <b>" . $ex->getCode() . "</b>; Error Message: <b>" . $ex->getMessage() . "</b>;";
 }
 
@@ -63,42 +58,24 @@ try
  * @param $maxClients
  * @internal param $after
  */
-function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $TopChannel, $maxClients, $channelPermissions, $order, $description, $codec, $codec_quality)
-{
+function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $TopChannel, $maxClients, $channelPermissions, $order, $description, $codec, $codec_quality) {
     $amountOfCurrentlyExistingTempChannels = intval($amountOfCurrentlyExistingTempChannels);
     $newChannelName = $tempChannelName . ($amountOfCurrentlyExistingTempChannels + 1);
-    
-    if(empty($order)){    
-        $channelID = $ts3->channelCreate(array(
-            "channel_name" => $newChannelName,
-            "cpid" => $TopChannel,
-            "channel_maxclients" => $maxClients,
-            "channel_flag_maxclients_unlimited" => false,
-            "channel_codec" => $codec,
-            "channel_codec_quality" => $codec_quality,
-            "channel_flag_permanent" => true
-        ));
+
+    if (empty($order)) {
+        $channelID = $ts3->channelCreate(array("channel_name" => $newChannelName, "cpid" => $TopChannel, "channel_maxclients" => $maxClients, "channel_flag_maxclients_unlimited" => false, "channel_codec" => $codec, "channel_codec_quality" => $codec_quality, "channel_flag_permanent" => true));
     }
-    else{
-        $channelID = $ts3->channelCreate(array(
-            "channel_name" => $newChannelName,
-            "cpid" => $TopChannel,
-            "channel_order" => $order,
-            "channel_maxclients" => $maxClients,
-            "channel_flag_maxclients_unlimited" => false,
-            "channel_codec" => $codec,
-            "channel_codec_quality" => $codec_quality,
-            "channel_flag_permanent" => true
-        ));
+    else {
+        $channelID = $ts3->channelCreate(array("channel_name" => $newChannelName, "cpid" => $TopChannel, "channel_order" => $order, "channel_maxclients" => $maxClients, "channel_flag_maxclients_unlimited" => false, "channel_codec" => $codec, "channel_codec_quality" => $codec_quality, "channel_flag_permanent" => true));
     }
     $channel = $ts3->channelGetById($channelID);
-    if(!empty($description)){
+    if (!empty($description)) {
         $channel->modify(array("channel_description" => $description));
     }
-    
-    foreach ($channelPermissions as $permission){
-        $permissionArr = explode('=',$permission);
-        $channel->permAssign($permissionArr[0],$permissionArr[1]);
+
+    foreach ($channelPermissions as $permission) {
+        $permissionArr = explode('=', $permission);
+        $channel->permAssign($permissionArr[0], $permissionArr[1]);
     }
 }
 
@@ -108,15 +85,12 @@ function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExi
  * @param $tempChannelName
  * @return int
  */
-function GetLastPublicChannel($PublicChannelsInfo, $Channels, $tempChannelName)
-{
+function GetLastPublicChannel($PublicChannelsInfo, $Channels, $tempChannelName) {
     $cid = 0;
     $cid = end($PublicChannelsInfo)['cid'];
 
-    foreach ($Channels as $Channel)
-    {
-        if (stristr($Channel['channel_name'], $tempChannelName))
-        {
+    foreach ($Channels as $Channel) {
+        if (stristr($Channel['channel_name'], $tempChannelName)) {
             $cid = $Channel['cid'];
         }
     }
@@ -128,13 +102,10 @@ function GetLastPublicChannel($PublicChannelsInfo, $Channels, $tempChannelName)
  * @param $tempChannelName
  * @return int
  */
-function CheckForExistingTemporaryPublicChannels($Channels, $tempChannelName)
-{
+function CheckForExistingTemporaryPublicChannels($Channels, $tempChannelName) {
     $amount = 0;
-    foreach ($Channels as $Channel)
-    {
-        if (stristr($Channel['channel_name'], $tempChannelName))
-        {
+    foreach ($Channels as $Channel) {
+        if (stristr($Channel['channel_name'], $tempChannelName)) {
             $amount++;
         }
     }
@@ -146,15 +117,11 @@ function CheckForExistingTemporaryPublicChannels($Channels, $tempChannelName)
  * @param $tempChannelName
  * @return int
  */
-function CheckForOccupiedTemporaryChannels($Channels, $tempChannelName)
-{
+function CheckForOccupiedTemporaryChannels($Channels, $tempChannelName) {
     $amount = 0;
-    foreach ($Channels as $Channel)
-    {
-        if (stristr($Channel['channel_name'], $tempChannelName))
-        {
-            if ($Channel['total_clients'] != "0")
-            {
+    foreach ($Channels as $Channel) {
+        if (stristr($Channel['channel_name'], $tempChannelName)) {
+            if ($Channel['total_clients'] != "0") {
                 $amount++;
             }
         }
@@ -168,16 +135,12 @@ function CheckForOccupiedTemporaryChannels($Channels, $tempChannelName)
  * @param $amountOfNeededChannels
  * @param $ts3
  */
-function CheckForEmptyExistingTemporaryPublicChannel($Channels, $tempChannelName, $amountOfNeededChannels, $ts3)
-{
+function CheckForEmptyExistingTemporaryPublicChannel($Channels, $tempChannelName, $amountOfNeededChannels, $ts3) {
     $amount = 0;
-    foreach ($Channels as $Channel)
-    {
-        if (stristr($Channel['channel_name'], $tempChannelName))
-        {
+    foreach ($Channels as $Channel) {
+        if (stristr($Channel['channel_name'], $tempChannelName)) {
             $amount++;
-            if($amount > $amountOfNeededChannels)
-            {
+            if ($amount > $amountOfNeededChannels) {
                 $Channel->delete(true);
             }
         }
@@ -189,18 +152,15 @@ function CheckForEmptyExistingTemporaryPublicChannel($Channels, $tempChannelName
  * @param $tempChannelName
  * @param $ts3
  */
-function DeleteAllTemporaryPublicChannels($Channels, $tempChannelName, $ts3, $maxClients)
-{
-    foreach ($Channels as $Channel)
-    {
-        if (stristr($Channel['channel_name'], $tempChannelName))
-        {
+function DeleteAllTemporaryPublicChannels($Channels, $tempChannelName, $ts3, $maxClients) {
+    foreach ($Channels as $Channel) {
+        if (stristr($Channel['channel_name'], $tempChannelName)) {
             //To be used in a later version until issue is fixed
             /*$Channel->modify(array(
                 "channel_maxclients" => 0
             ));*/
-            if($Channel['total_clients'] == "0") {
-               $Channel->delete();
+            if ($Channel['total_clients'] == "0") {
+                $Channel->delete();
             }
             /*else{
                 $Channel->modify(array(
