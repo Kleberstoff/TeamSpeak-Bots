@@ -15,10 +15,12 @@ try {
     $ts3 = TeamSpeak3::factory("serverquery://{$config["Username"]}:{$config["Password"]}@{$config["serverIP"]}:{$config["qPort"]}/?server_port={$config["sPort"]}&nickname={$config["BotName"]}#no_query_clients");
     while (true) {
         set_time_limit(30); // Preventing a PHP Timeout
+        //loop through
         foreach ($config['TopChannel'] as $top_channel) {
+            //the top channels and set top_channel for array of publicchannels
             $occupiedChannels = 0;
             $ts3->channelListReset();
-            $ts3Channels = $ts3->channelGetbyId($config['TopChannel'])->subChannelList();
+            $ts3Channels = $ts3->channelGetbyId($top_channel)->subChannelList();
             $PublicChannelInfo = array();
 
             foreach ($config['PublicChannels']['$top_channel'] as $PublicChannel) {
@@ -40,7 +42,7 @@ try {
 
                 CheckForEmptyExistingTemporaryPublicChannel($ts3Channels, $config['TempChannelName'], $amountOfNeededTemporaryChannels, $ts3);
                 if ($amountOfExistingTemporaryChannels <= $amountOfOccupiedTemporaryChannels) {
-                    CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $config['TopChannel'], $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description'], $config['channel_codec'], $config['channel_codec_quality']);
+                    CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $top_channel, $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description'], $config['channel_codec'], $config['channel_codec_quality']);
                 }
             }
             sleep($config['CheckDelay']);
