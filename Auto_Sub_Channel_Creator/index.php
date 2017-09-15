@@ -20,6 +20,7 @@ try {
             //the top channels and set top_channel for array of publicchannels
             $occupiedChannels = 0;
             $ts3->channelListReset();
+            //Child list from current topchannel
             $ts3Channels = $ts3->channelGetbyId($top_channel)->subChannelList();
             $PublicChannelInfo = array();
 
@@ -42,7 +43,7 @@ try {
 
                 CheckForEmptyExistingTemporaryPublicChannel($ts3Channels, $config['TempChannelName'], $amountOfNeededTemporaryChannels, $ts3);
                 if ($amountOfExistingTemporaryChannels <= $amountOfOccupiedTemporaryChannels) {
-                    CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $top_channel, $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description'], $config['channel_codec'], $config['channel_codec_quality']);
+                     CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $top_channel, $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description'], $config['channel_codec'], $config['channel_codec_quality']);
                 }
             }
             sleep($config['CheckDelay']);
