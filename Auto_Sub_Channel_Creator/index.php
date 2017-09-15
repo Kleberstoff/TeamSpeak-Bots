@@ -24,7 +24,7 @@ try {
             $ts3Channels = $ts3->channelGetbyId($top_channel)->subChannelList();
             $PublicChannelInfo = array();
 
-            foreach ($config['PublicChannels']['$top_channel'] as $PublicChannel) {
+            foreach ($config['PublicChannels'][$top_channel] as $PublicChannel) {
                 $ChannelInfo = $ts3->channelGetbyID($PublicChannel);
                 if ($ChannelInfo['total_clients'] != "0") {
                     $occupiedChannels++;
@@ -32,18 +32,18 @@ try {
                 $PublicChannelInfo[] = $ChannelInfo;
             }
 
-            if ($occupiedChannels != count($config['PublicChannels']['$top_channel'])) {
+            if ($occupiedChannels != count($config['PublicChannels'][$top_channel])) {
                 DeleteAllTemporaryPublicChannels($ts3Channels, $config['TempChannelName'], $ts3, $config['TempMaxClients']);
             }
 
-            if ($occupiedChannels == count($config['PublicChannels']['$top_channel'])) {
+            if ($occupiedChannels == count($config['PublicChannels'][$top_channel])) {
                 $amountOfExistingTemporaryChannels = CheckForExistingTemporaryPublicChannels($ts3Channels, $config['TempChannelName']);
                 $amountOfOccupiedTemporaryChannels = CheckForOccupiedTemporaryChannels($ts3Channels, $config['TempChannelName']);
                 $amountOfNeededTemporaryChannels = ($amountOfOccupiedTemporaryChannels + 1);
 
                 CheckForEmptyExistingTemporaryPublicChannel($ts3Channels, $config['TempChannelName'], $amountOfNeededTemporaryChannels, $ts3);
                 if ($amountOfExistingTemporaryChannels <= $amountOfOccupiedTemporaryChannels) {
-                     CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $top_channel, $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description'], $config['channel_codec'], $config['channel_codec_quality']);
+                    CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $top_channel, $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description'], $config['channel_codec'], $config['channel_codec_quality']);
                 }
             }
             sleep($config['CheckDelay']);
