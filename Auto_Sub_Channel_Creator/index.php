@@ -64,7 +64,8 @@ try {
 function CreateNewTemporaryChannel($ts3Channels, $ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $TopChannel, $maxClients, $channelPermissions, $order, $description, $codec, $codec_quality) {
     $amountOfCurrentlyExistingTempChannels = intval($amountOfCurrentlyExistingTempChannels);
     $newChannelName = $tempChannelName . ($amountOfCurrentlyExistingTempChannels + 1);
-	while(in_array($newChannelName, $ts3Channels)){
+	while(in_array($newChannelName, $ts3Channels))
+	{
 		$newChannelName = $tempChannelName . (substr($newChannelName, strlen($tempChannelName)) + 1);
 	}
     
