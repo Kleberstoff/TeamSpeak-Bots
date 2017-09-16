@@ -43,7 +43,7 @@ try {
 
                 CheckForEmptyExistingTemporaryPublicChannel($ts3Channels, $config['TempChannelName'], $amountOfNeededTemporaryChannels, $ts3);
                 if ($amountOfExistingTemporaryChannels <= $amountOfOccupiedTemporaryChannels) {
-                    CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $top_channel, $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description'], $config['channel_codec'], $config['channel_codec_quality']);
+                    CreateNewTemporaryChannel($ts3Channels,$ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $top_channel, $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description'], $config['channel_codec'], $config['channel_codec_quality']);
                 }
             }
             sleep($config['CheckDelay']);
@@ -61,10 +61,13 @@ try {
  * @param $maxClients
  * @internal param $after
  */
-function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $TopChannel, $maxClients, $channelPermissions, $order, $description, $codec, $codec_quality) {
+function CreateNewTemporaryChannel($ts3Channels, $ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $TopChannel, $maxClients, $channelPermissions, $order, $description, $codec, $codec_quality) {
     $amountOfCurrentlyExistingTempChannels = intval($amountOfCurrentlyExistingTempChannels);
     $newChannelName = $tempChannelName . ($amountOfCurrentlyExistingTempChannels + 1);
-
+	while(in_array($newChannelName, $ts3Channels)){
+		$newChannelName = $tempChannelName . (substr($newChannelName, strlen($tempChannelName)) + 1);
+	}
+    
     if (empty($order)) {
         $channelID = $ts3->channelCreate(array("channel_name" => $newChannelName, "cpid" => $TopChannel, "channel_maxclients" => $maxClients, "channel_flag_maxclients_unlimited" => false, "channel_codec" => $codec, "channel_codec_quality" => $codec_quality, "channel_flag_permanent" => true));
     }
