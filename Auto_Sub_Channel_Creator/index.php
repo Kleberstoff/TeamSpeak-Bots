@@ -44,7 +44,7 @@ try
             CheckForEmptyExistingTemporaryPublicChannel($ts3Channels, $config['TempChannelName'], $amountOfNeededTemporaryChannels, $ts3);
             if($amountOfExistingTemporaryChannels <= $amountOfOccupiedTemporaryChannels)
             {
-                CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $config['TopChannel'], $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description']);
+                CreateNewTemporaryChannel($ts3, $config['TempChannelName'], $amountOfExistingTemporaryChannels, $config['TopChannel'], $config['TempMaxClients'], $config['ChannelPermissions'], $config['channel_order'], $config['channel_description'], $config['PublicChannels']);
             }
         }
         sleep($config['CheckDelay']);
@@ -62,9 +62,9 @@ try
  * @param $maxClients
  * @internal param $after
  */
-function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $TopChannel, $maxClients, $channelPermissions, $order, $description)
+function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $TopChannel, $maxClients, $channelPermissions, $order, $description, $channels)
 {
-    $amountOfCurrentlyExistingTempChannels = intval($amountOfCurrentlyExistingTempChannels);
+    $amountOfCurrentlyExistingTempChannels = intval($amountOfCurrentlyExistingTempChannels) + count($channels);
     if (strpos($tempChannelName, '%%') !== false) {
         $newChannelName = str_replace('%%', $amountOfCurrentlyExistingTempChannels + 1, $tempChannelName);
     }
