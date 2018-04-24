@@ -67,12 +67,8 @@ try
 function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExistingTempChannels, $after, $maxClients, $channelPermissions)
 {
     $amountOfCurrentlyExistingTempChannels = intval($amountOfCurrentlyExistingTempChannels);
-    if (strpos($tempChannelName, '%%') !== false) {
-        $newChannelName = str_replace('%%', $amountOfCurrentlyExistingTempChannels + 1, $tempChannelName);
-    }
-    else{
-        $newChannelName = $tempChannelName . ($amountOfCurrentlyExistingTempChannels + 1);
-    }
+    $newChannelName = $tempChannelName . ($amountOfCurrentlyExistingTempChannels + 1);
+    
     if(!empty($order)){
         $after = $order;
     }
