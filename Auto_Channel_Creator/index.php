@@ -68,7 +68,7 @@ function CreateNewTemporaryChannel($ts3, $tempChannelName, $amountOfCurrentlyExi
 {
     $amountOfCurrentlyExistingTempChannels = intval($amountOfCurrentlyExistingTempChannels);
     $newChannelName = $tempChannelName . ($amountOfCurrentlyExistingTempChannels + 1);
-    if(!empty($order){
+    if(!empty($order)){
         $after = $order;
     }
     $channelID = $ts3->channelCreate(array(
