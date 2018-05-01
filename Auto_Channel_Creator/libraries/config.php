@@ -12,7 +12,7 @@ $config['Password'] = "XK09HBXj"; // Password for the Query
 $config['serverIP'] = "127.0.0.1"; // Server IP or Domain Name
 $config['sPort'] = "9987"; // Server Port for the Query | Default: 9987
 $config['qPort'] = "10011"; // Query Port for the Query | Default: 10011
-$config['BotName'] = rawurlencode("I am normally invisible"); // url encoded bot name
+$config['BotName'] = rawurlencode("I am normally invisible". randomString(4)); // url encoded bot name
 $config['CheckDelay'] = 1; // Amount of Seconds between each Check. Only use Number greater then 1. Faster Checks are useful for bigger TeamSpeaks, in smaller TeamSpeaks, this can be higher
 /* Bot Config End */
 
@@ -30,3 +30,8 @@ $config['ChannelPermissions'] = array(
    * "i_channel_needed_join_power=40"
   */
 /* TeamSpeak Settings */
+
+function randomString($Length) {
+  $Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  return substr(str_shuffle($Chars), 0, $Length);
+}
