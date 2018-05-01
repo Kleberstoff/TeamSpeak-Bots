@@ -9,7 +9,15 @@ require("libraries/config.php");
 // Channel 3 | Person 1
 // Channel 4 | Will be created after Channel 3 is being occupied by at least 1 User
 // If a User joins in Channel 4, Channel 5 will be created
+echo ++$argv[1];    
+$_ = $_SERVER['_']; 
 
+register_shutdown_function(function () {
+    global $_, $argv; 
+    sleep(10);
+    // restart myself
+    pcntl_exec($_, $argv);
+});
 try
 {
     TeamSpeak3::init();
@@ -56,8 +64,9 @@ try
 } catch (Exception $ex)
 {
     echo "ErrorID: <b>" . $ex->getCode() . "</b>; Error Message: <b>" . $ex->getMessage() . "</b>;";
+    $ts3->logout();
 }
-
+pcntl_exec($_, $argv);
 /**
  * @param $ts3
  * @param $tempChannelName
